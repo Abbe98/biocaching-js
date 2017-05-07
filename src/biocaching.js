@@ -36,12 +36,19 @@ class Biocaching {
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
+
         localStorage.setItem('email', response.email);
         localStorage.setItem('token', response.authentication_token);
         localStorage.setItem('userId', response.id);
+        localStorage.setItem('displayName', (!response.displayname ? response.firstname + ' ' + response.lastname : response.displayname));
+        localStorage.setItem('picture', response.picture.thumb);
+
         this.email = response.email;
         this.userId = response.id;
         this._token = response.authentication_token;
+        this.displayName = localStorage.getItem('displayName');
+        this.picture = response.picture.thumb;
+
         if (typeof callback == 'function') {
           callback.apply(null, [response]);
         }
@@ -67,7 +74,9 @@ class Biocaching {
     this.email = localStorage.getItem('email');
     this.userId = localStorage.getItem('userId');
     this._token = localStorage.getItem('token');
-    // check if any of them isn't set
+    this.displayName = localStorage.getItem('displayName');
+    this.picture = localStorage.getItem('picture');
+    // check if any of the important ones isn't set
     if (!this.email || !this._token || !this.userId) {
       localStorage.clear();
       return false;
