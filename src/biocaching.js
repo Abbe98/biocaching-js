@@ -3,7 +3,7 @@ class Biocaching {
    * Initializes the framework by adding an API key.
    * @constructor
    * @param {string} key your API key.
-   * @param {string} language the preferred language as ISO 639-2 strings.
+   * @param {string} [language=eng] the preferred language as ISO 639-2 strings.
    */
   constructor(key, language = 'eng') {
     this._endpoint = 'https://api.biocaching.com/';
