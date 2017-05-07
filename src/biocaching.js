@@ -38,8 +38,9 @@ class Biocaching {
         var response = JSON.parse(xhr.responseText);
         localStorage.setItem('email', response.email);
         localStorage.setItem('token', response.authentication_token);
-        localStorage.setItem('user-id', response.user_id);
+        localStorage.setItem('userId', response.id);
         this.email = response.email;
+        this.userId = response.id;
         this._token = response.authentication_token;
         if (typeof callback == 'function') {
           callback.apply(null, [response]);
@@ -64,9 +65,10 @@ class Biocaching {
    */
   authorized() {
     this.email = localStorage.getItem('email');
+    this.userId = localStorage.getItem('userId');
     this._token = localStorage.getItem('token');
     // check if any of them isn't set
-    if (!this.email || !this._token) {
+    if (!this.email || !this._token || !this.userId) {
       return false;
     } else {
       return true;
@@ -150,7 +152,7 @@ class Biocaching {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          var obs = this._mergeObservationUser(response.observation, response.users);
+          var obs = this._cleanObservation(this._mergeObservationUser(response.observation, response.users));
           callback.apply(null, [obs]);
         }
       } else {
@@ -262,7 +264,7 @@ class Biocaching {
         if (typeof callback == 'function') {
           var result = [];
           response.hits.forEach((obs) => {
-            result.push(this._mergeObservationUser(obs._source, response.users));
+            result.push(this._cleanObservation(this._mergeObservationUser(obs._source, response.users)));
           });
           callback.apply(null, [result]);
         }
@@ -297,7 +299,7 @@ class Biocaching {
         if (typeof callback == 'function') {
           var result = [];
           response.hits.forEach((obs) => {
-            result.push(this._mergeObservationUser(obs._source, response.users));
+            result.push(this._cleanObservation(this._mergeObservationUser(obs._source, response.users)));
           });
           callback.apply(null, [result]);
         }
@@ -331,7 +333,7 @@ class Biocaching {
         if (typeof callback == 'function') {
           var result = [];
           response.hits.forEach((obs) => {
-            result.push(this._mergeObservationUser(obs._source, response.users));
+            result.push(this._cleanObservation(this._mergeObservationUser(obs._source, response.users)));
           });
           callback.apply(null, [result]);
         }
@@ -478,5 +480,66 @@ class Biocaching {
   _mergeObservationUser(observation, users) {
     observation.user = users[observation.user_id];
     return observation;
+  }
+
+  /**
+   * Simplifies object created by Elasticsearch
+   * @protected
+   * @param {object} obs the observation object
+   * @returns {object}
+   */
+  _cleanObservation(obs) {
+    var cleanObservation = {};
+    cleanObservation.LatLng = {};
+    cleanObservation.pictures = [];
+    cleanObservation.taxon = {}
+
+    cleanObservation.id = obs.id;
+    cleanObservation.comment = obs.comment;
+    cleanObservation.speciesId = obs.taxon.id;
+    cleanObservation.time = new Date(obs.observed_at);
+    cleanObservation.LatLng.lat = Number(obs.location.lat);
+    cleanObservation.LatLng.lng = Number(obs.location.lon);
+
+    cleanObservation.user = obs.user;
+    cleanObservation.commentsCount = obs.comments_count;
+    cleanObservation.likesCount = obs.likes.length;
+
+    if (obs.likes.filter(e => e.user_id === this.userId).length > 0) {
+      cleanObservation.likedByAuthorizedUser = true;
+    } else {
+      cleanObservation.likedByAuthorizedUser = false;
+    }
+
+    obs.pictures.forEach((picture) => {
+      if (picture.likes.filter(e => e.user_id == this.userId).length > 0) {
+        var liked = true;
+      } else {
+        var liked = false;
+      }
+
+      cleanObservation.pictures.push({
+        likedByAuthorizedUser: liked,
+        primary: picture.primary,
+        photographer: picture.photographer,
+        urls: picture.urls,
+        likesCount: picture.likes.length
+      });
+    });
+
+    cleanObservation.taxon.id = obs.taxon.id;
+    cleanObservation.taxon.scientificName = obs.taxon.scientific_name;
+
+    // #TODO clean up
+    cleanObservation.taxon.commonName = obs.taxon.all_common_names[this.language];
+    if (!cleanObservation.taxon.commonName) {
+      cleanObservation.taxon.commonName = obs.taxon.all_common_names['eng'];
+    }
+
+    if (!cleanObservation.taxon.commonName) {
+      cleanObservation.taxon.commonName = obs.taxon.scientific_name;
+    }
+
+    return cleanObservation;
   }
 }
