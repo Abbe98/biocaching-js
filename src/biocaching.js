@@ -7,9 +7,9 @@ class Biocaching {
    */
   constructor(key, language = 'eng') {
     this._endpoint = 'https://api.biocaching.com/';
-    this._token = undefined;
-    this.email = undefined;
     this._apiKey = key;
+
+    this.authorized();
 
     this.language = localStorage.getItem('language');
     if (!this.language) {
