@@ -150,7 +150,8 @@ class Biocaching {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(null, [response]);
+          var obs = this._mergeObservationUser(response.observation, response.users);
+          callback.apply(null, [obs]);
         }
       } else {
         return false;
@@ -259,7 +260,11 @@ class Biocaching {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(null, [response]);
+          var result = [];
+          response.hits.forEach((obs) => {
+            result.push(this._mergeObservationUser(obs._source, response.users));
+          });
+          callback.apply(null, [result]);
         }
       } else {
         return false;
@@ -290,7 +295,11 @@ class Biocaching {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(null, [response]);
+          var result = [];
+          response.hits.forEach((obs) => {
+            result.push(this._mergeObservationUser(obs._source, response.users));
+          });
+          callback.apply(null, [result]);
         }
       } else {
         return false;
@@ -320,7 +329,11 @@ class Biocaching {
       if (xhr.readyState == 4) {
         var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(null, [response]);
+          var result = [];
+          response.hits.forEach((obs) => {
+            result.push(this._mergeObservationUser(obs._source, response.users));
+          });
+          callback.apply(null, [result]);
         }
       } else {
         return false;
@@ -454,5 +467,16 @@ class Biocaching {
       }
     }
     xhr.send();
+  }
+
+  /**
+   * Merges an user into an observation object.
+   * @protected
+   * @param {object} observation the observation to get an assigned user.
+   * @param {object} users object containing possible users.
+   */
+  _mergeObservationUser(observation, users) {
+    observation.user = users[observation.user_id];
+    return observation;
   }
 }
