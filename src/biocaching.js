@@ -131,6 +131,35 @@ class Biocaching {
   }
 
   /**
+   * Used to retrieve an single observation
+   * @public
+   * @param {number} obs observation id
+   * @param {function} callback the function to run when the function has finished successfully.
+   */
+  getObservation(obs, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.overrideMimeType('application/json');
+    xhr.open('GET', this._endpoint + 'observations/' + obs, true);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('X-User-Api-Key', this._apiKey);
+    xhr.setRequestHeader('X-User-Email', this.email);
+    xhr.setRequestHeader('X-User-Token', this._token);
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4) {
+        var response = JSON.parse(xhr.responseText);
+        if (typeof callback == 'function') {
+          callback.apply(null, [response]);
+        }
+      } else {
+        return false;
+      }
+    }
+    xhr.send();
+  }
+
+  /**
    * Used to upload a observation
    * @public
    * @param {object} observationObject observation data defined in an object.
