@@ -22,7 +22,7 @@ class Biocaching {
    * Used to login an user
    * @public
    * @param {string} username the email of the user.
-   * @param {string} username the ´password of the user.
+   * @param {string} password the ´password of the user.
    * @param {function} callback the function to run when the function has finished successfully.
    */
   login(username, password, callback) {
