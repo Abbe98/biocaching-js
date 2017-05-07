@@ -69,6 +69,7 @@ class Biocaching {
     this._token = localStorage.getItem('token');
     // check if any of them isn't set
     if (!this.email || !this._token || !this.userId) {
+      localStorage.clear();
       return false;
     } else {
       return true;
