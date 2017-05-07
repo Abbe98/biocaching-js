@@ -29,20 +29,20 @@ class Biocaching {
     var xhr = new XMLHttpRequest();
     xhr.overrideMimeType('application/json');
     xhr.open('POST', this._endpoint + 'users/sign_in', true);
-    xhr.setRequestHeader('X-User-Api-Key', this.apiKey);
+    xhr.setRequestHeader('X-User-Api-Key', this._apiKey);
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.setRequestHeader('Accept', 'application/json');
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         localStorage.setItem('email', response.email);
         localStorage.setItem('token', response.authentication_token);
         localStorage.setItem('user-id', response.user_id);
         this.email = response.email;
         this._token = response.authentication_token;
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -88,11 +88,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -117,11 +117,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -153,11 +153,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -195,11 +195,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -226,11 +226,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -257,11 +257,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -287,11 +287,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -316,11 +316,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -344,10 +344,10 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
         // turn terms into one big HTML string
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         var fullTerms;
         for (index = 0; index < response.terms.length; ++index) {
           fullTerms = fullTerms + (index + 1) + '. ' + response.terms[index] + '<br>';
@@ -355,7 +355,7 @@ class Biocaching {
         fullTerms = fullTerms + response.updated_at;
 
         if (typeof callback == 'function') {
-          callback.apply(fullTerms);
+          callback.apply(null, [fullTerms]);
         }
       } else {
         return false;
@@ -379,10 +379,10 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
         // check status true/false
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (response.status == 'accepted') {
           response = true;
         } else {
@@ -390,7 +390,7 @@ class Biocaching {
         }
 
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
@@ -414,11 +414,11 @@ class Biocaching {
     xhr.setRequestHeader('X-User-Email', this.email);
     xhr.setRequestHeader('X-User-Token', this._token);
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
-        response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
         if (typeof callback == 'function') {
-          callback.apply(response);
+          callback.apply(null, [response]);
         }
       } else {
         return false;
