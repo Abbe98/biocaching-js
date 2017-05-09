@@ -538,7 +538,7 @@ class Biocaching {
     });
 
     cleanObservation.taxon.id = obs.taxon.id;
-    cleanObservation.taxon.scientificName = obs.taxon.scientific_name;
+    cleanObservation.taxon.scientificName = obs.taxon.scientific_name.charAt(0).toUpperCase() + obs.taxon.scientific_name.slice(1);
 
     // #TODO clean up
     cleanObservation.taxon.commonName = obs.taxon.all_common_names[this.language];
@@ -547,7 +547,7 @@ class Biocaching {
     }
 
     if (!cleanObservation.taxon.commonName) {
-      cleanObservation.taxon.commonName = obs.taxon.scientific_name;
+      cleanObservation.taxon.commonName = cleanObservation.taxon.scientificName;
     }
 
     return cleanObservation;
