@@ -486,6 +486,7 @@ class Biocaching {
    * @protected
    * @param {object} observation the observation to get an assigned user.
    * @param {object} users object containing possible users.
+   * @return {object}
    */
   _mergeObservationUser(observation, users) {
     observation.user = users[observation.user_id];
